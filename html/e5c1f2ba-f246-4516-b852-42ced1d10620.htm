@@ -1,0 +1,67 @@
+﻿<html><head><meta http-equiv="X-UA-Compatible" content="IE=edge" /><link rel="shortcut icon" href="../icons/favicon.ico" /><link rel="stylesheet" type="text/css" href="../styles/branding.css" /><link rel="stylesheet" type="text/css" href="../styles/branding-en-US.css" /><script type="text/javascript" src="../scripts/branding.js"> </script><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Sixth Attempt, Await Asynchronously</title><meta name="Language" content="en-us" /><meta name="Microsoft.Help.Id" content="e5c1f2ba-f246-4516-b852-42ced1d10620" /><meta name="Description" content="In our prior attempts, we accessed the Result property of the Task returned by the M:Mavidian.DataConveyer.Orchestrators.IOrchestrator.ExecuteAsync method. Is there a downside of calling Data Conveyer this way?" /><meta name="Microsoft.Help.ContentType" content="Concepts" /><meta name="BrandingAware" content="true" /><link type="text/css" rel="stylesheet" href="../styles/highlight.css" /><script type="text/javascript" src="../scripts/highlight.js"> </script><link rel="stylesheet" type="text/css" href="../styles/branding-Website.css" /><script type="text/javascript" src="../scripts/jquery-3.3.1.min.js"></script><script type="text/javascript" src="../scripts/branding-Website.js"></script><script type="text/javascript" src="../scripts/clipboard.min.js"></script></head><body onload="OnLoad('cs')"><input type="hidden" id="userDataCache" class="userDataStyle" /><div class="pageHeader" id="PageHeader">Data Conveyer Documentation<form id="SearchForm" method="get" action="#" onsubmit="javascript:TransferToSearchPage(); return false;"><input id="SearchTextBox" type="text" maxlength="200" /><button id="SearchButton" type="submit"></button></form></div><div class="pageBody"><div class="leftNav" id="leftNav"><div id="tocNav"><div class="toclevel0" data-toclevel="0"><a class="tocCollapsed" onclick="javascript: Toggle(this);" href="#!" /><a data-tochassubtree="true" href="../html\bc1db7e0-6011-496d-8f90-57281169e145.htm" title="Data Conveyer Documentation" tocid="roottoc">Data Conveyer Documentation</a></div><div class="toclevel1" data-toclevel="1" data-childrenloaded="true"><a class="tocExpanded" onclick="javascript: Toggle(this);" href="#!" /><a data-tochassubtree="true" href="../html/9bea5665-8eab-4b91-ae28-fe38d6c6398f.htm" title="Data Conveyer Primer" tocid="9bea5665-8eab-4b91-ae28-fe38d6c6398f">Data Conveyer Primer</a></div><div class="toclevel2" data-toclevel="2"><a data-tochassubtree="false" href="../html/28fdbe7d-7304-4e76-bf0b-857dc7f7b922.htm" title="First Attempt, One-Liner" tocid="28fdbe7d-7304-4e76-bf0b-857dc7f7b922">First Attempt, One-Liner</a></div><div class="toclevel2" data-toclevel="2"><a data-tochassubtree="false" href="../html/809a712b-8183-465d-aa66-46de66cebfd4.htm" title="Second Attempt, File Copy" tocid="809a712b-8183-465d-aa66-46de66cebfd4">Second Attempt, File Copy</a></div><div class="toclevel2" data-toclevel="2"><a data-tochassubtree="false" href="../html/fbd18535-990d-45d2-a211-4dcccdcef97d.htm" title="Third Attempt, Format Converter" tocid="fbd18535-990d-45d2-a211-4dcccdcef97d">Third Attempt, Format Converter</a></div><div class="toclevel2" data-toclevel="2"><a data-tochassubtree="false" href="../html/2ac8b82f-c4d7-4075-99e6-7d9f8f7deb4a.htm" title="Fourth Attempt, Synchronous Call" tocid="2ac8b82f-c4d7-4075-99e6-7d9f8f7deb4a">Fourth Attempt, Synchronous Call</a></div><div class="toclevel2" data-toclevel="2"><a data-tochassubtree="false" href="../html/44df6375-1f54-4440-9dac-2396a9e88527.htm" title="Fifth Attempt, Timeout" tocid="44df6375-1f54-4440-9dac-2396a9e88527">Fifth Attempt, Timeout</a></div><div class="toclevel2 current" data-toclevel="2"><a data-tochassubtree="false" href="../html/e5c1f2ba-f246-4516-b852-42ced1d10620.htm" title="Sixth Attempt, Await Asynchronously" tocid="e5c1f2ba-f246-4516-b852-42ced1d10620">Sixth Attempt, Await Asynchronously</a></div><div class="toclevel2" data-toclevel="2"><a data-tochassubtree="false" href="../html/4da71b1e-4fda-425b-acaa-c54f7d1106a3.htm" title="Process Summary" tocid="4da71b1e-4fda-425b-acaa-c54f7d1106a3">Process Summary</a></div></div><div id="tocResizableEW" onmousedown="OnMouseDown(event);"></div><div id="TocResize" class="tocResize"><img id="ResizeImageIncrease" src="../icons/TocOpen.gif" onclick="OnIncreaseToc()" alt="Click or drag to resize" title="Click or drag to resize" /><img id="ResizeImageReset" src="../icons/TocClose.gif" style="display:none" onclick="OnResetToc()" alt="Click or drag to resize" title="Click or drag to resize" /></div></div><div class="topicContent" id="TopicContent"><table class="titleTable"><tr><td class="logoColumn"><img src="../icons/Mavidian.png" /></td><td class="titleColumn"><h1>Sixth Attempt, Await Asynchronously</h1></td></tr></table><span class="introStyle"></span> <div class="introduction"><p>
+          In our prior attempts, we accessed the Result property of the Task returned by the
+          <a href="e1faf81f-a1ac-4de7-847a-5b1f396005c6.htm">ExecuteAsync<span id="LST65A4D461_0"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST65A4D461_0?cs=()|vb=|cpp=()|nu=()|fs=()");</script></a> method.
+          Is there a downside of calling Data Conveyer this way?
+       </p><p>
+          Imagine again a long running process being carried out by Data Conveyer. While waiting for the completion of the
+          process, our application is blocked and remains unresponsive. What can be done about it?
+       </p></div><div class="collapsibleAreaRegion"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID1RB')" onkeypress="SectionExpandCollapse_CheckKey('ID1RB', event)" tabindex="0"><img id="ID1RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />True Asynchronous Call</span></div><div id="ID1RBSection" class="collapsibleSection"><p>
+            In order to avoid blocking and truly take advantage of the asynchronous nature of Data Conveyer, we need to call the
+            <a href="e1faf81f-a1ac-4de7-847a-5b1f396005c6.htm">ExecuteAsync<span id="LST65A4D461_1"></span><script type="text/javascript">AddLanguageSpecificTextSet("LST65A4D461_1?cs=()|vb=|cpp=()|nu=()|fs=()");</script></a>
+            method from within an asynchronous method and await a completion of the task returned by this call.
+         </p><p>
+          There are many ways to launch an asynchronous method. The easiest one (although not very robust) is to define a method
+          with a signature similar to: <span class="code">async Task MyProcessAsync()</span> and call it synchronously like this:
+          <span class="code">MyProcessAsync().Wait()</span>.
+        </p><div class="alert"><table><tr><th><img src="../icons/AlertNote.png" alt="Note" /> Note</th></tr><tr><td><p>
+              If you have followed the pages of this primer so far using a Console Application project, this may a good moment to pause
+              and consider a different project type. Majority of programming frameworks have built-in support for asynchronous methods.
+              For example, in a Windows Forms Application, we can provide an asynchronous handler of a button click event like this:
+              <span class="code">async void myButton_Click(object sender, EventArgs e)</span>.
+            </p></td></tr></table></div><div class="codeSnippetContainer"><div class="codeSnippetContainerTabs"><div id="ID0EBBABAAA_tab1" class="codeSnippetContainerTab"><a href="#" onclick="javascript:ChangeTab('ID0EBBABAAA','cs','1','2');return false;">C#</a></div><div id="ID0EBBABAAA_tab2" class="codeSnippetContainerTab"><a href="#" onclick="javascript:ChangeTab('ID0EBBABAAA','vb','2','2');return false;">VB</a></div></div><div class="codeSnippetContainerCodeContainer"><div class="codeSnippetToolBar"><div class="codeSnippetToolBarText"><a id="ID0EBBABAAA_copyCode" href="#" class="copyCodeSnippet" onclick="javascript:CopyToClipboard('ID0EBBABAAA');return false;" title="Copy">Copy</a></div></div><div id="ID0EBBABAAA_code_Div1" class="codeSnippetContainerCode" style="display: block"><pre xml:space="preserve"><span class="highlight-keyword">using</span> Mavidian.DataConveyer;
+<span class="highlight-keyword">using</span> Mavidian.DataConveyer.Orchestrators;
+<span class="highlight-keyword">var</span> config = <span class="highlight-keyword">new</span> OrchestratorConfig()
+{
+  InputDataKind = KindOfTextData.Delimited,
+  InputFileName = <span class="highlight-literal">"input.csv"</span>,
+  HeadersInFirstInputRow = <span class="highlight-keyword">true</span>,
+  OutputDataKind = KindOfTextData.Keyword,
+  OutputFileName = <span class="highlight-literal">"output.kw"</span>
+};
+ProcessResult rslt;
+<span class="highlight-keyword">using</span> (<span class="highlight-keyword">var</span> orchtr = OrchestratorCreator.GetEtlOrchestrator(config))
+{
+  rslt = <span class="highlight-keyword">await</span> orchtr.ExecuteAsync();
+}
+<span class="highlight-keyword">if</span> (rslt.CompletionStatus == CompletionStatus.IntakeDepleted)
+{
+  Console.WriteLine($<span class="highlight-literal">"Successfully converted {rslt.RowsWritten} records!"</span>);
+  <span class="highlight-comment">//In a Windows Forms Application, provide feedback using a message box or text box instead</span>
+}</pre></div><div id="ID0EBBABAAA_code_Div2" class="codeSnippetContainerCode" style="display: none"><pre xml:space="preserve"><span class="highlight-keyword">Imports</span> Mavidian.DataConveyer
+<span class="highlight-keyword">Imports</span> Mavidian.DataConveyer.Orchestrators
+<span class="highlight-keyword">Dim</span> config = <span class="highlight-keyword">New</span> OrchestratorConfig() <span class="highlight-keyword">With</span> {
+  .InputDataKind = KindOfTextData.Delimited,
+  .InputFileName = <span class="highlight-literal">"input.csv"</span>,
+  .HeadersInFirstInputRow = <span class="highlight-keyword">true</span>,
+  .OutputDataKind = KindOfTextData.Keyword,
+  .OutputFileName = <span class="highlight-literal">"output.kw"</span>
+}
+<span class="highlight-keyword">Dim</span> rslt <span class="highlight-keyword">As</span> ProcessResult
+<span class="highlight-keyword">Using</span> orchtr = OrchestratorCreator.GetEtlOrchestrator(config)
+  rslt = <span class="highlight-keyword">Await</span> orchtr.ExecuteAsync()
+<span class="highlight-keyword">End</span> <span class="highlight-keyword">Using</span>
+<span class="highlight-keyword">If</span> rslt.CompletionStatus = CompletionStatus.IntakeDepleted <span class="highlight-keyword">Then</span>
+  Console.WriteLine(<span class="highlight-literal">"Successfully converted {rslt.RowsWritten} records!"</span>)
+  <span class="highlight-comment">'In a Windows Forms Application, provide feedback using a message box or text box instead</span>
+<span class="highlight-keyword">End</span> <span class="highlight-keyword">If</span></pre></div></div></div><script type="text/javascript">AddLanguageTabSet("ID0EBBABAAA");</script><p>
+            We now have the best of both worlds: our application is simple and responsive as well. Simple, because
+            we delegated all the hard work to Data Conveyer. Responsive, because we called Data Conveyer
+            asynchronously from within an asynchronous method.
+         </p></div><div class="collapsibleAreaRegion" id="seeAlsoSection"><span class="collapsibleRegionTitle" onclick="SectionExpandCollapse('ID2RB')" onkeypress="SectionExpandCollapse_CheckKey('ID2RB', event)" tabindex="0"><img id="ID2RBToggle" class="collapseToggle" src="../icons/SectionExpanded.png" />See Also</span></div><div id="ID2RBSection" class="collapsibleSection"><h4 class="subHeading">Other Resources</h4><div class="seeAlsoStyle"><a href="9bea5665-8eab-4b91-ae28-fe38d6c6398f.htm">Data Conveyer Primer</a></div><div class="seeAlsoStyle"><a href="a37f29a4-4918-4efe-b20f-f2526ae6b518.htm">API Reference</a></div><div class="seeAlsoStyle"><a href="e2e232b9-111d-4e56-b79c-ad2815ea9495.htm">Glossary</a></div></div></div></div><div id="pageFooter" class="pageFooter"><p>Copyright © 2016-2019 Mavidian Technologies Limited Liability Company. All Rights Reserved.</p><div class="feedbackLink">Send comments on this topic to
+        <a id="HT_MailLink" href="mailto:contact%40mavidian.com?Subject=Data%20Conveyer%20Documentation">contact@mavidian.com</a></div>
+        <script type="text/javascript">
+        var HT_mailLink = document.getElementById("HT_MailLink");
+        var HT_mailLinkText = HT_mailLink.innerHTML;
+        HT_mailLink.href += ": " + document.title + "\u0026body=" + encodeURIComponent("Your feedback is used to improve the documentation and the product. Your e-mail address will not be used for any other purpose and is disposed of after the issue you report is resolved. While working to resolve the issue that you report, you may be contacted via e-mail to get further details or clarification on the feedback you sent. After the issue you report has been addressed, you may receive an e-mail to let you know that your feedback has been addressed.");
+        HT_mailLink.innerHTML = HT_mailLinkText;
+        </script></div></body></html>
