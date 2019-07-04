@@ -126,6 +126,7 @@
     <member name="P:Mavidian.DataConveyer.Common.ExternalLine.ClstrNo">
       <summary>
             Cluster number. Only meaningful in case of <see cref="T:Mavidian.DataConveyer.Common.Xrecord" /> subclass; otherwise 0.
+            Note that this number is not the same as the <see cref="P:Mavidian.DataConveyer.Entities.KeyVal.IRecordBase.ClstrNo" /> of the actual record (<see cref="T:Mavidian.DataConveyer.Entities.KeyVal.IRecord" />).
             </summary>
     </member>
     <member name="P:Mavidian.DataConveyer.Common.ExternalLine.Excerpt">
@@ -141,6 +142,11 @@
     <member name="P:Mavidian.DataConveyer.Common.ExternalLine.Text">
       <summary>
             A single line of text. Only meaningful in case of <see cref="T:Mavidian.DataConveyer.Common.Xtext" /> subclass; otherwise null (Nothing in Visual Basic).
+            </summary>
+    </member>
+    <member name="P:Mavidian.DataConveyer.Common.ExternalLine.TraceBin">
+      <summary>
+            Initial trace bin contents that may be obtained from XML nodes that represent clusters. Only meaningful in case of <see cref="T:Mavidian.DataConveyer.Common.Xrecord" /> subclass; otherwise null.
             </summary>
     </member>
     <member name="P:Mavidian.DataConveyer.Common.ExternalLine.Type">
@@ -538,16 +544,25 @@
     <member name="P:Mavidian.DataConveyer.Common.Xrecord.ClstrNo">
       <summary>
             Cluster number associated with the record; 0 means undetermined.
+            Data Conveyer assigns this number based on the ClusterNode value of the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.XmlJsonIntakeSettings" /> setting.
+            This number is assigned sequentially, separately for each source.
+            The <see cref="P:Mavidian.DataConveyer.Common.Xrecord.ClstrNo" /> is intended for evaluation (together with <see cref="P:Mavidian.DataConveyer.Entities.KeyVal.IRecordBase.SourceNo" />) by the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.ClusterMarker" /> function,
+            which controls determination of the <see cref="P:Mavidian.DataConveyer.Entities.KeyVal.IRecordBase.ClstrNo" /> of the record (<see cref="T:Mavidian.DataConveyer.Entities.KeyVal.IRecord" />) on intake.
             </summary>
     </member>
     <member name="P:Mavidian.DataConveyer.Common.Xrecord.Excerpt">
       <summary>
-            First item in a form key=value
+            First item in a form key=value.
             </summary>
     </member>
     <member name="P:Mavidian.DataConveyer.Common.Xrecord.Items">
       <summary>
             A sequence of key-value pairs, each pair defining a single element (field) of the record; both key and value are strings.
+            </summary>
+    </member>
+    <member name="P:Mavidian.DataConveyer.Common.Xrecord.TraceBin">
+      <summary>
+            Initial trace bin contents that may be obtained from XML nodes that represent clusters.
             </summary>
     </member>
     <member name="T:Mavidian.DataConveyer.Common.Xsegment">
@@ -1638,7 +1653,7 @@
             Defines when Data Conveyer is allowed to start the <see cref="F:Mavidian.DataConveyer.Common.Phase.Transformation" /> phase. One of:
             <list type="bullet"><item><see cref="F:Mavidian.DataConveyer.Common.DeferTransformation.NotDeferred" /> - (default) appropriate in most scenarios.</item><item><see cref="F:Mavidian.DataConveyer.Common.DeferTransformation.UntilRecordInitiation" /> - typically used in conjunction with the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.RecordInitiator" /> function.</item><item><see cref="F:Mavidian.DataConveyer.Common.DeferTransformation.UntilIntakeCompletion" /> - not recommended, except for troubleshooting.</item><item><see cref="F:Mavidian.DataConveyer.Common.DeferTransformation.Indefinitely" /> - restricted for use in specialized tests only!</item></list>
             Note that after all records are read, the Intake phase still continues execution by executing record clustering. However, during the clustering process Data Conveyer has
-            no ability totrigger the start of the Transformation phase. Similarly, the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.ClusterMarker" /> function (unlike the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.RecordInitiator" /> function ) has no ability 
+            no ability to trigger the start of the Transformation phase. Similarly, the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.ClusterMarker" /> function (unlike the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.RecordInitiator" /> function ) has no ability 
             to set the trace bin contents.
             </summary>
     </member>
@@ -2685,6 +2700,12 @@
                 </description></item><item><term>IncludeAttributes</term><description><see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only, ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />. true to include attributes (the key of the corresponding item will be prefixed by @); truePlain to include attributes (without prefix in item key); false (default) to ignore explicit text.
                   It is generally recommended that the keys (names) of items that originate from XML attributes be prepended with @; therefore setting of true is preferred over truePlain.
                   In the latter case, name conflicts are possible between items originating from attributes and inner nodes. 
+                </description></item><item><term>AddClusterDataToTraceBin</term><description><see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only, ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />. Also ignored if ClusterNode value is absent.
+                  true to include attributes of the cluster node(s) as key value pairs in the trace bins attached to the records of the cluster.
+                  false to exclude cluster data from intake processing.
+                  The keys of the elements placed in the trace bin reflect nodes traversed to reach the cluster node (including the attribute node itself)
+                  separated by periods. For example, if ClusterNode value is Region/State and the actual nodes contain &lt;Region name="East"&gt;&lt;State abbrev="NJ"&gt;...,
+                  then there will be 2 elements placed in the trace bin with keys of Region.name and Region.State.abbrev and the corresponding values of East and NJ.
                 </description></item></list><note type="note"><para>
             "xpath" in any of the node parameters is a simplified version of the xpath syntax.
             It is always relative to the containing node (no need for ./).

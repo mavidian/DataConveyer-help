@@ -136,7 +136,7 @@
             Defines when Data Conveyer is allowed to start the <a href="373cd1d0-eda1-c54e-2f7e-ed3a596fd2d5.htm">Transformation</a> phase. One of:
             <ul><li><a href="c8855677-ce49-6eed-b179-4deb825f9dd1.htm">NotDeferred</a> - (default) appropriate in most scenarios.</li><li><a href="c8855677-ce49-6eed-b179-4deb825f9dd1.htm">UntilRecordInitiation</a> - typically used in conjunction with the <a href="09a5896a-02ef-e170-3a39-90bc3e1b44ff.htm">RecordInitiator</a> function.</li><li><a href="c8855677-ce49-6eed-b179-4deb825f9dd1.htm">UntilIntakeCompletion</a> - not recommended, except for troubleshooting.</li><li><a href="c8855677-ce49-6eed-b179-4deb825f9dd1.htm">Indefinitely</a> - restricted for use in specialized tests only!</li></ul>
             Note that after all records are read, the Intake phase still continues execution by executing record clustering. However, during the clustering process Data Conveyer has
-            no ability totrigger the start of the Transformation phase. Similarly, the <a href="d68e844c-3622-d074-f890-14cceba69557.htm">ClusterMarker</a> function (unlike the <a href="09a5896a-02ef-e170-3a39-90bc3e1b44ff.htm">RecordInitiator</a> function ) has no ability 
+            no ability to trigger the start of the Transformation phase. Similarly, the <a href="d68e844c-3622-d074-f890-14cceba69557.htm">ClusterMarker</a> function (unlike the <a href="09a5896a-02ef-e170-3a39-90bc3e1b44ff.htm">RecordInitiator</a> function ) has no ability 
             to set the trace bin contents.
             </div></td></tr><tr data="public;declared;notNetfw;"><td><img src="../icons/pubproperty.gif" alt="Public property" title="Public property" /></td><td><a href="32d5f905-794a-593b-c197-e3a32cdd39f1.htm">EagerInitialization</a></td><td><div class="summary">
             If true, all initializations are executed regardless if prior initializations failed or not. So, for example <a href="56e8034c-033e-7b16-4aea-fa67d16fc68b.htm">OutputInitializer</a>  gets executed even after a failure of <a href="0a631825-7a7e-2725-1eb6-e7a5cad0c6fe.htm">IntakeInitializer</a>.
@@ -496,6 +496,12 @@
                 </li><li><strong>IncludeAttributes</strong> - <a href="3a060217-e38a-2399-3897-477fb3fc466e.htm">XML</a> only, ignored in case of <a href="3a060217-e38a-2399-3897-477fb3fc466e.htm">JSON</a>. true to include attributes (the key of the corresponding item will be prefixed by @); truePlain to include attributes (without prefix in item key); false (default) to ignore explicit text.
                   It is generally recommended that the keys (names) of items that originate from XML attributes be prepended with @; therefore setting of true is preferred over truePlain.
                   In the latter case, name conflicts are possible between items originating from attributes and inner nodes. 
+                </li><li><strong>AddClusterDataToTraceBin</strong> - <a href="3a060217-e38a-2399-3897-477fb3fc466e.htm">XML</a> only, ignored in case of <a href="3a060217-e38a-2399-3897-477fb3fc466e.htm">JSON</a>. Also ignored if ClusterNode value is absent.
+                  true to include attributes of the cluster node(s) as key value pairs in the trace bins attached to the records of the cluster.
+                  false to exclude cluster data from intake processing.
+                  The keys of the elements placed in the trace bin reflect nodes traversed to reach the cluster node (including the attribute node itself)
+                  separated by periods. For example, if ClusterNode value is Region/State and the actual nodes contain &lt;Region name="East"&gt;&lt;State abbrev="NJ"&gt;...,
+                  then there will be 2 elements placed in the trace bin with keys of Region.name and Region.State.abbrev and the corresponding values of East and NJ.
                 </li></ul><div class="alert"><table><tr><th><img src="../icons/AlertNote.png" alt="Note" /> Note</th></tr><tr><td><p>
             "xpath" in any of the node parameters is a simplified version of the xpath syntax.
             It is always relative to the containing node (no need for ./).

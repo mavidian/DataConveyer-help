@@ -136,6 +136,7 @@
   <HelpKINode Title="ExternalLine.Excerpt property" Url="html/d1f5f311-f6f1-f191-42f1-50c8047a244e.htm" />
   <HelpKINode Title="ExternalLine.Items property" Url="html/7e56bc4e-1d69-8a34-e8ce-8d9f27645849.htm" />
   <HelpKINode Title="ExternalLine.Text property" Url="html/e9354f4d-a405-64ad-761f-0f19bbfc2371.htm" />
+  <HelpKINode Title="ExternalLine.TraceBin property" Url="html/c0212570-ceb9-a164-b712-0c0f4b7ec7b6.htm" />
   <HelpKINode Title="ExternalLine.Type property" Url="html/caa00ec6-576c-1a25-c399-da0d90ba9a00.htm" />
   <HelpKINode Title="ExternalLineHelpers class">
     <HelpKINode Title="ExternalLineHelpers Class" Url="html/0ea0b9be-2292-6f5e-ccf3-b8fb720dcd48.htm" />
@@ -723,7 +724,11 @@
   <HelpKINode Title="ToString method" Url="html/62ce1b7c-f64e-3247-371f-cbc16f3375af.htm" />
   <HelpKINode Title="ToTextTuple method" Url="html/47faf986-4e26-8c53-02a0-d17c33d93e3f.htm" />
   <HelpKINode Title="ToTuple method" Url="html/70bc54b4-52ae-168f-02ab-8433768f35c2.htm" />
-  <HelpKINode Title="TraceBin property" Url="html/86ce78c6-138c-8d3e-4cc0-805ce83d14e4.htm" />
+  <HelpKINode Title="TraceBin property">
+    <HelpKINode Title="ExternalLine.TraceBin Property " Url="html/c0212570-ceb9-a164-b712-0c0f4b7ec7b6.htm" />
+    <HelpKINode Title="IRecordBase.TraceBin Property " Url="html/86ce78c6-138c-8d3e-4cc0-805ce83d14e4.htm" />
+    <HelpKINode Title="Xrecord.TraceBin Property " Url="html/c17f13f6-f0c0-e52c-543f-ad12092af002.htm" />
+  </HelpKINode>
   <HelpKINode Title="TrailerContents property" Url="html/e2ccc5eb-80d3-fef8-a169-8230f010b9e4.htm" />
   <HelpKINode Title="TransfmrNo property">
     <HelpKINode Title="PhaseEventArgs.TransfmrNo Property " Url="html/254e573c-9d14-6b67-dcd6-48af52449e98.htm" />
@@ -768,6 +773,7 @@
   <HelpKINode Title="Xrecord.ClstrNo property" Url="html/e3fa0fdf-e540-6d5e-9d26-4aeb466f3e38.htm" />
   <HelpKINode Title="Xrecord.Excerpt property" Url="html/b9b24d52-179c-e309-78ed-ba109c5248b0.htm" />
   <HelpKINode Title="Xrecord.Items property" Url="html/382683fe-0ac4-8fcf-f910-ad7bbb36cdd5.htm" />
+  <HelpKINode Title="Xrecord.TraceBin property" Url="html/c17f13f6-f0c0-e52c-543f-ad12092af002.htm" />
   <HelpKINode Title="Xsegment class">
     <HelpKINode Title="Xsegment Class" Url="html/9b9bb82d-d139-f1b3-687d-664bb1cf27e2.htm" />
     <HelpKINode Title="constructor" Url="html/0a4fbc8d-6bb0-a726-9811-dce3a932072d.htm" />
