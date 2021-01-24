@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shfbBuild product="Sandcastle Help File Builder and Tools" version="2019.4.14.0" projectFile="C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\DataConveyer_doc.shfbproj" started="7/4/2019 4:42:09 PM">
+<shfbBuild product="Sandcastle Help File Builder and Tools" version="2019.4.14.0" projectFile="C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\DataConveyer_doc.shfbproj" started="1/23/2021 9:26:28 PM">
 <buildStep step="Initializing">
 Finding tools...
 The Sandcastle tools are located in &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\&#39;
@@ -37,16 +37,16 @@ Copying XML comments files
 <buildStep step="GenerateSharedContent">
 Generating shared content files (en-US, English (United States))...
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
-</plugIn>    Last step completed in 00:00:00.0079
+</plugIn>    Last step completed in 00:00:00.0080
 </buildStep>
 <buildStep step="GenerateApiFilter">
 Generating API filter for MRefBuilder...
-    Last step completed in 00:00:00.0120
+    Last step completed in 00:00:00.0250
 </buildStep>
 <buildStep step="GenerateReflectionInfo">
 Generating reflection information...
 [C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe - GenerateRefInfo.proj]
-Build started 7/4/2019 4:42:10 PM.
+Build started 1/23/2021 9:26:30 PM.
 Project &quot;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\GenerateRefInfo.proj&quot; on node 1 (default targets).
 PrepareForBuild:
   Creating directory &quot;obj\Debug\&quot;.
@@ -56,19 +56,19 @@ GenerateRefInfo:
   Portions Copyright c 2006-2019, Eric Woodruff, All Rights Reserved.
   No source code context base path specified.  Source context information is unavailable.
   Loaded 1 assemblies for reflection and 54 dependency assemblies.
-  Wrote information on 4 namespaces, 42 types, and 363 members
+  Wrote information on 4 namespaces, 42 types, and 364 members
   Copying file from &quot;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\reflection.org&quot; to &quot;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\reflection.all&quot;.
   XslTransform (v2019.4.14.0)
   Copyright c 2006-2019, Microsoft Corporation, All Rights Reserved.
   Portions Copyright c 2006-2019, Eric Woodruff, All Rights Reserved.
   Applying XSL transformation &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\ProductionTransforms\MergeDuplicates.xsl&#39;.
 Done Building Project &quot;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\GenerateRefInfo.proj&quot; (default targets).
-    Last step completed in 00:00:01.6725
+    Last step completed in 00:00:02.9750
 </buildStep>
 <buildStep step="TransformReflectionInfo">
 Transforming reflection output...
 [C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe - TransformManifest.proj]
-Build started 7/4/2019 4:42:12 PM.
+Build started 1/23/2021 9:26:33 PM.
 Project &quot;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\TransformManifest.proj&quot; on node 1 (default targets).
 TransformManifest:
   XslTransform (v2019.4.14.0)
@@ -85,11 +85,11 @@ TransformManifest:
   Portions Copyright c 2006-2019, Eric Woodruff, All Rights Reserved.
   Applying XSL transformation &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\ProductionTransforms\ReflectionToManifest.xsl&#39;.
 Done Building Project &quot;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\TransformManifest.proj&quot; (default targets).
-    Last step completed in 00:00:00.7849
+    Last step completed in 00:00:00.9263
 </buildStep>
 <buildStep step="GenerateNamespaceSummaries">
 Generating namespace summary information...
-    Last step completed in 00:00:00.0519
+    Last step completed in 00:00:00.0580
 </buildStep>
 <buildStep step="CopyConceptualContent">
 Copying conceptual content...
@@ -122,14 +122,14 @@ Generating conceptual topic files
     C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Content\APIReference.aml -&gt; C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\ddueXml\a37f29a4-4918-4efe-b20f-f2526ae6b518.xml
     Parsing topic file &#39;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Content\Glossary.aml&#39;
     C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Content\Glossary.aml -&gt; C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\ddueXml\e2e232b9-111d-4e56-b79c-ad2815ea9495.xml
-    Last step completed in 00:00:00.0898
+    Last step completed in 00:00:00.0880
 </buildStep>
 <buildStep step="CreateConceptualTopicConfigs">
 Creating conceptual topic configuration files...
     Companion files
     _ContentMetadata_.xml
     Merging topic IDs into manifest.xml
-    Last step completed in 00:00:00.0170
+    Last step completed in 00:00:00.0100
 </buildStep>
 <buildStep step="CopyAdditionalContent">
 Copying additional content files...
@@ -137,16 +137,16 @@ C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\icons\favicon.ico -
 C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\icons\favicon.ico -&gt; C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\Output\Website\icons\favicon.ico
 C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\icons\Mavidian.png -&gt; C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\Output\HtmlHelp1\icons\Mavidian.png
 C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\icons\Mavidian.png -&gt; C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\Output\Website\icons\Mavidian.png
-    Last step completed in 00:00:00.0180
+    Last step completed in 00:00:00.0140
 </buildStep>
 <buildStep step="MergeTablesOfContents">
 Merging conceptual and additional tables of contents...
-    Last step completed in 00:00:00.0000
+    Last step completed in 00:00:00.0010
 </buildStep>
 <buildStep step="GenerateIntermediateTableOfContents">
 Generating intermediate table of contents file...
 [C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe - GenerateIntermediateTOC.proj]
-Build started 7/4/2019 4:42:13 PM.
+Build started 1/23/2021 9:26:34 PM.
 Project &quot;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\GenerateIntermediateTOC.proj&quot; on node 1 (default targets).
 GenerateIntermediateTOC:
   XslTransform (v2019.4.14.0)
@@ -155,12 +155,12 @@ GenerateIntermediateTOC:
   Applying XSL transformation &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\\ProductionTransforms\CreateVSToc.xsl&#39;.
 Done Building Project &quot;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\GenerateIntermediateTOC.proj&quot; (default targets).
 Generating conceptual content intermediate TOC file...
-    Last step completed in 00:00:00.3411
+    Last step completed in 00:00:00.4320
 </buildStep>
 <buildStep step="CreateBuildAssemblerConfigs">
 Creating Sandcastle configuration files...
     sandcastle.config
-    Last step completed in 00:00:00.2696
+    Last step completed in 00:00:00.2180
 </buildStep>
 <buildStep step="MergeCustomConfigs">
 Merging custom build component configurations
@@ -177,7 +177,7 @@ C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\sandca
 <buildStep step="BuildTopics">
 Building help topics...
 [C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe - BuildTopics.proj]
-Build started 7/4/2019 4:42:14 PM.
+Build started 1/23/2021 9:26:34 PM.
 Project &quot;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\BuildTopics.proj&quot; on node 1 (default targets).
 BuildTopics:
   BuildAssembler (v2019.4.14.0)
@@ -192,11 +192,11 @@ BuildTopics:
   CopyFromIndexComponent: &quot;reflection&quot; in-memory cache entries used: 5 of 15.
   CopyFromIndexComponent: &quot;comments&quot; in-memory cache entries used: 3 of 30.
 Done Building Project &quot;C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\BuildTopics.proj&quot; (default targets).
-    Last step completed in 00:00:13.5386
+    Last step completed in 00:00:12.3202
 </buildStep>
 <buildStep step="CombiningIntermediateTocFiles">
 Combining conceptual and API intermediate TOC files...
-    Last step completed in 00:00:00.0110
+    Last step completed in 00:00:00.0040
 </buildStep>
 <buildStep step="ExtractingHtmlInfo">
 Extracting HTML info for HTML Help 1 and/or website...
@@ -218,7 +218,7 @@ Processed 406 HTML files
 Sorting keywords and generating See Also indices
 Saving website keyword index to C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\WebKI.xml
 Saving website table of contents to C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\WebTOC.xml
-    Last step completed in 00:00:00.8527
+    Last step completed in 00:00:00.8016
 </buildStep>
 <buildStep step="CopyStandardHelpContent">
 Copying standard help content...
@@ -360,7 +360,7 @@ C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyle
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\branding-Website.js -&gt; C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\Output\Website\scripts\branding-Website.js
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\clipboard.min.js -&gt; C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\Output\Website\scripts\clipboard.min.js
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\jquery-3.3.1.min.js -&gt; C:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\Output\Website\scripts\jquery-3.3.1.min.js
-    Last step completed in 00:00:00.9397
+    Last step completed in 00:00:00.6670
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating HTML Help 1 table of contents file...
@@ -372,7 +372,7 @@ Generating HTML Help 1 index file...
 </buildStep>
 <buildStep step="GenerateHelpProject">
 Generating HTML Help 1 project file...
-    Last step completed in 00:00:00.0110
+    Last step completed in 00:00:00.0050
 </buildStep>
 <buildStep step="CompilingHelpFile">
 Compiling HTML Help 1 file...
@@ -387,11 +387,11 @@ Compiling HTML Help 1 file...
   
   
   
-  Compile time: 0 minutes, 16 seconds
+  Compile time: 0 minutes, 22 seconds
   
   408	Topics
   
-  6,306	Local links
+  6,435	Local links
   
   664	Internet links
   
@@ -401,37 +401,37 @@ Compiling HTML Help 1 file...
   
   
   
-  Created c:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\Output\HtmlHelp1\DataConveyer.chm, 760,402 bytes
+  Created c:\Users\Mavidian\Source\Repos\DataConveyer\DataConveyer_doc\Help\Working\Output\HtmlHelp1\DataConveyer.chm, 764,876 bytes
   
-  Compression decreased file by 3,502,102 bytes.
+  Compression decreased file by 3,513,811 bytes.
   
-    Last step completed in 00:00:16.9364
+    Last step completed in 00:00:22.8199
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating website table of contents file...
-    Last step completed in 00:00:00.0010
+    Last step completed in 00:00:00.0000
 </buildStep>
 <buildStep step="GenerateFullTextIndex">
 Generating full-text index for the website...
 
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
 Adding lightweight search and TOC elements to each topic...
-</plugIn>    Last step completed in 00:00:03.1928
+</plugIn>    Last step completed in 00:00:00.7090
 </buildStep>
 <buildStep step="CopyingWebsiteFiles">
 Copying website files to output folder...
 
 Copied 500 files
 Copied 595 files for the website content
-    Last step completed in 00:00:01.0861
+    Last step completed in 00:00:00.8140
 </buildStep>
 <buildStep step="CleanIntermediates">
 Removing intermediate files...
-    Last step completed in 00:00:00.2673
+    Last step completed in 00:00:00.4270
 </buildStep>
 <buildStep step="Completed">
 
-Build completed successfully at 7/4/2019 4:42:50 PM.  Total time: 00:00:41.4975
+Build completed successfully at 1/23/2021 9:27:13 PM.  Total time: 00:00:44.5611
 
 </buildStep>
 </shfbBuild>
