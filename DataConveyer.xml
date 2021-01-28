@@ -339,7 +339,7 @@
     </member>
     <member name="F:Mavidian.DataConveyer.Common.KindOfTextData.Arbitrary">
       <summary>
-            Text data with fields "cherry-picked" using arbitrary formulas.
+            Text data with fields "cherry-picked" using arbitrary formulas (regex).
             </summary>
     </member>
     <member name="F:Mavidian.DataConveyer.Common.KindOfTextData.XML">
@@ -354,7 +354,9 @@
     </member>
     <member name="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON">
       <summary>
-             JSON data of unlimited hierarchy depth (subject to special field naming convention).
+             JSON data with unlimited nesting hierarchy. The hierarchy is reflected using a dot-notation. Specifically, field names follow the convention of the Path property
+             in the Newtonsoft's JsonReader. For example, a JSON object defined as <c>{"Data":{"DataId":42,"Values":["val1","val2"]}}</c> is equivalent to a record with these
+             3 fields: <c>"Data.DataId"</c> with a value of <c>42</c>, <c>"Data.Values[0]"</c> with a value of <c>"val1"</c>, and <c>"Data.Values[1]"</c> with a value of <c>"val2"</c>.
             </summary>
     </member>
     <member name="F:Mavidian.DataConveyer.Common.KindOfTextData.X12">
@@ -922,9 +924,15 @@
             Defines characteristics of an item.
             </summary>
     </member>
+    <member name="M:Mavidian.DataConveyer.Entities.KeyVal.ItemDef.#ctor(Mavidian.DataConveyer.Entities.KeyVal.ItemType)">
+      <summary>
+            Create the item type definition for a given type and no format.
+            </summary>
+      <param name="type">Type of the item to construct</param>
+    </member>
     <member name="M:Mavidian.DataConveyer.Entities.KeyVal.ItemDef.#ctor(Mavidian.DataConveyer.Entities.KeyVal.ItemType,System.String)">
       <summary>
-            Constructs the item type definition for a given type and format.
+            Create the item type definition for a given type and format.
             </summary>
       <param name="type">Type of the item to construct</param>
       <param name="format">Format of the item to construct</param>
@@ -1469,18 +1477,19 @@
             Array of elements that define fields to be extracted from input lines.
             Each element is a string consisting of 2 parts separated by a space: a field name followed by a regular expression containing formula to extract a value from input line.
             Data Conveyer will extract the fields in the order they are specified in this setting.
-            This setting is mandatory for <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.InputDataKind" /> of Arbitrary; if specified for other data kinds, it is ignored.
+            This setting is mandatory for <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.InputDataKind" /> of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.Arbitrary" />; if specified for other data kinds, it is ignored.
             </summary>
     </member>
     <member name="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.ArbitraryOutputDefs">
       <summary>
-            Array of strings that define data to be placed in output lines.
-            Each string contains a fragment of output line and may contain a single token in a form of {field}, where
-            such token will be substituted in the output record by the actual value of the field.
-            In order to include brace characters in the output, they need to be escaped (preceded by a backslash), like so: \{ and \}.
-            Note though that backslash characters inside C# string literals may need to be escaped themselves.
-            For example: "\\{ "Format":"JSON" \\}" or @"\{ "Format":"JSON" \}" will both output identical JSON string.
-            This setting is mandatory for <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.OutputDataKind" /> of Arbitrary; if specified for other data kinds, it is ignored.
+            Array of strings that define data to be placed on output lines.
+            Each string contains a fragment of the output line and may contain a single token in a form of <c>{field}</c>, where
+            such token will be substituted by the actual value of the field.
+            In order to include brace characters in the output, they need to be escaped (preceded by a backslash), like so: <c>\{</c> and <c>\}</c>.
+            Note that backslash characters inside C# string literals may need to be escaped themselves.
+            For example: <c>"\\{ "Format":"JSON" \\}"</c> (as well as <c>@"\{ ""Format"":""JSON"" \}"</c>) will output <c>{ "Format": "JSON" }</c>.
+            Data fragments defined by array elements are spliced together to form output lines.
+            This setting is mandatory for <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.OutputDataKind" /> of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.Arbitrary" />; if specified for other data kinds, it is ignored.
             </summary>
     </member>
     <member name="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.AsyncIntake">
@@ -1582,10 +1591,19 @@
             In case this function marks the first record of a cluster (i.e. <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.MarkerStartsCluster" /> is true), then the current record starts a new set of records accumulated for a cluster;
             otherwise (<see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.MarkerStartsCluster" /> is false, i.e. the function marks the last record of a cluster), the current record ends the set of records accumulated for a cluster, and a new empty
             set of accumulated records is created.
-            If not specified, the default function will split clusters on every record, i.e.:
-            <code language="c#">(r, pr, i) =&gt; true</code><code language="vb">Function(r, pr, i) True</code>
+            If not specified, the default function will split clusters on every record, with one notable exception as follows:
+            In case of XML/JSON intake (<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" />, <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />) and the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.XmlJsonIntakeSettings" /> setting
+            directing Data Conveyer to automatically detect clusters (ClusterNode or DetectClusters respectively), then Data Conveyer will respect clusters detected
+            from XML/JSON intake.
+            Here are is the default <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.ClusterMarker" /> function:
+            <code language="c#">(r, pr, i) =&gt; r.ClstrNo == 0 || pr == null || r.ClstrNo != pr.ClstrNo;</code><code language="vb">Function(r, pr, i) r.ClstrNo = 0 OrElse pr Is Nothing OrElse r.ClstrNo &lt;&gt; pr.ClstrNo</code>
             Any exception thrown by this function will cause the process shutdown with a completion status of <see cref="F:Mavidian.DataConveyer.Orchestrators.CompletionStatus.Failed" />.
-            </summary>
+            <note><para>
+            An astute reader may be asking what will happen when the automatic cluster detection during XML/JSON intake coexists with explicit (non-default)
+            <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.ClusterMarker" /> and <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.MarkerStartsCluster" /> settings. In this advanced scenario, the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.ClusterMarker" /> function can
+            override the cluster assignment made by the XML/JSON intake. The ClstrNo property of the <see cref="T:Mavidian.DataConveyer.Entities.KeyVal.IRecord" /> (either current or previous) can be used in a logic to
+            decide whether to return true (new cluster) or false (continue with old cluster).
+            </para></note></summary>
     </member>
     <member name="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.ClusterRouter">
       <summary>
@@ -2683,34 +2701,41 @@
     </member>
     <member name="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.XmlJsonIntakeSettings">
       <summary>
-            A string containing comma-separated parameters for parsing <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> data on intake.
+            A string containing comma-separated parameters for parsing <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" /> data on intake.
             Each such parameter is a key-value pair with a pipe symbol (|) separating the key and the value.
             The parameters reflect the shape of data to parse and define the elements to be extracted.
-            There are some differences (explained below) in their interpretation in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> vs <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />.
+            There are some differences (explained below) in their interpretation in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> vs <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> vs <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />.
             The following keys can be used:
             <list type="bullet"><item><term>CollectionNode</term><description>
                   "xpath" to the collection of clusters (or records if the ClusterNode parameter is absent).
                   If this parameter is absent for <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" />, then intake is expected to contain XML fragment where each root constitutes a record or a cluster.
                   In case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />, absent or empty value generally means an array instead of an object.
+                  Ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />.
                 </description></item><item><term>ClusterNode</term><description>
                   "xpath" to the cluster node within the collection node. Records within a cluster node will be assigned the same cluster number (sequential).
                   If this parameter is absent, then all records will be assigned a cluster number of 0 (undetermined) and the clusters will
                   be determined solely by the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.ClusterMarker" /> function.
+                  Ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />.
                 </description></item><item><term>RecordNode</term><description>
                   "xpath" to the record node within the cluster node (or the collection node if the cluster node is empty).
                   The RecordNode parameter cannot be absent, although in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />, it can be empty.
-                </description></item><item><term>IncludeExplicitText</term><description><see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only, ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />. true to include explicit text inside record nodes in XML data; false (default) to ignore explicit text.
+                  Ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />.
+                </description></item><item><term>IncludeExplicitText</term><description><see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only, ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />. true to include explicit text inside record nodes in XML data; false (default) to ignore explicit text.
                   Explicit text is the text contained directly inside an XML element that represents the record node; this is not typically expected.
                   Data Conveyer assigns a special key of "__explicitText__" to explicit text in the record node.
-                </description></item><item><term>IncludeAttributes</term><description><see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only, ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />. true to include attributes (the key of the corresponding item will be prefixed by @); truePlain to include attributes (without prefix in item key); false (default) to ignore explicit text.
+                </description></item><item><term>IncludeAttributes</term><description><see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only, ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />. true to include attributes (the key of the corresponding item will be prefixed by @); truePlain to include attributes (without prefix in item key); false (default) to ignore explicit text.
                   It is generally recommended that the keys (names) of items that originate from XML attributes be prepended with @; therefore setting of true is preferred over truePlain.
                   In the latter case, name conflicts are possible between items originating from attributes and inner nodes. 
-                </description></item><item><term>AddClusterDataToTraceBin</term><description><see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only, ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />. Also ignored if ClusterNode value is absent.
+                </description></item><item><term>AddClusterDataToTraceBin</term><description><see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only, ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />. Also ignored if ClusterNode value is absent.
                   true to include attributes of the cluster node(s) as key value pairs in the trace bins attached to the records of the cluster.
                   false to exclude cluster data from intake processing.
                   The keys of the elements placed in the trace bin reflect nodes traversed to reach the cluster node (including the attribute node itself)
                   separated by periods. For example, if ClusterNode value is Region/State and the actual nodes contain &lt;Region name="East"&gt;&lt;State abbrev="NJ"&gt;...,
                   then there will be 2 elements placed in the trace bin with keys of Region.name and Region.State.abbrev and the corresponding values of East and NJ.
+                </description></item><item><term>DetectClusters</term><description><see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" /> only, ignored in case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />.
+                  If present, Data Conveyer will recognize clusters on intake by tracking nesting levels of JSON objects (intake records).
+                  In case the level is not the same as on previous record, a new cluster is detected.
+                  If absent, array nesting of JSON objects is ignored and records remain unclustered (although clusters can still be assigned via the <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.ClusterMarker" /> function).
                 </description></item></list><note type="note"><para>
             "xpath" in any of the node parameters is a simplified version of the xpath syntax.
             It is always relative to the containing node (no need for ./).
@@ -2720,9 +2745,7 @@
             </para><para>
             In case of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" />, each node can contain attributes. For example, "xpath" of "Department[@name=\"QA\"]/Employees" can be used to identify employees of the QA department.
             Empty nodes are not allowed and the // syntax is not supported.
-            </para></note><para><b>Example 1:</b><c>"CollectionNode|Members,RecordNode|Member"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />)</i></para><para><b>Example 2:</b><c>"CollectionNode|Root/Members,ClusterNode|Group/FamilyRecordNode|Member"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />)</i></para><para><b>Example 3:</b><c>"RecordNode|row"</c><i>(XML fragment or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> object with an array)</i></para><para><b>Example 4:</b><c>"CollectionNode|,RecordNode|"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> only - an array of objects=records)</i></para><para><b>Example 5:</b><c>"ClusterNode|,RecordNode|"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> only - an array of arrays=clusters of objects=records)</i></para><para><b>Example 6:</b><c>"RecordNode|"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> only - multiple objects containing records)</i></para><para><b>Example 7:</b><c>"CollectionNode|Root/Members[@region=\"North\"],ClusterNode|Group[@id=2][@zone=\"\"]/Family,RecordNode|Data/Member[@class],IncludeExplicitText|true"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only)</i></para><para>This configuration setting is only applicable when <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.InputDataKind" /> value is <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />.</para><note type="note"><para>
-            This configuration setting is not relevant to processing of <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" /> intake..
-            </para></note></summary>
+            </para></note><para><b>Example 1:</b><c>"CollectionNode|Members,RecordNode|Member"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />)</i></para><para><b>Example 2:</b><c>"CollectionNode|Root/Members,ClusterNode|Group/FamilyRecordNode|Member"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />)</i></para><para><b>Example 3:</b><c>"RecordNode|row"</c><i>(XML fragment or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> object with an array)</i></para><para><b>Example 4:</b><c>"CollectionNode|,RecordNode|"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> only - an array of objects=records)</i></para><para><b>Example 5:</b><c>"ClusterNode|,RecordNode|"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> only - an array of arrays=clusters of objects=records)</i></para><para><b>Example 6:</b><c>"RecordNode|"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> only - multiple objects containing records)</i></para><para><b>Example 7:</b><c>"CollectionNode|Root/Members[@region=\"North\"],ClusterNode|Group[@id=2][@zone=\"\"]/Family,RecordNode|Data/Member[@class],IncludeExplicitText|true"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only)</i></para><para><b>Example 8:</b><c>"DetectClusters"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" /> only)</i></para><para>This configuration setting is only applicable when <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.InputDataKind" /> value is <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />.</para></summary>
     </member>
     <member name="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.XmlJsonOutputSettings">
       <summary>
@@ -2778,7 +2801,7 @@
             Attributes can be specified, but must include both name and value. In such cases,
             an attribute will be added to the node on output. Care needs to be taken in case of attributes of the record node to avoid name duplicates with the
             records fields (when AttributeFields parameter is used).
-            </para></note><para><b>Example 1:</b><c>"CollectionNode|Members,RecordNode|Member,IndentChars|  "</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />)</i></para><para><b>Example 2:</b><c>"RecordNode|Member,IndentChars|\t"</c><i>(XML or JSON)</i></para><para><b>Example 3:</b><c>"CollectionNode|Root/Members,ClusterNode|Group/Subgroup/Family,RecordNode|Data/Member"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />)</i></para><para><b>Example 4:</b><c>"RecordNode|,IndentChars|  "</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> only - an array of object containing records)</i></para><para><b>Example 5:</b><c>"ClusterNode|,RecordNode|"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> only - an array of arrays=clusters of objects=records)</i></para><para><b>Example 6:</b><c>""</c><i>(JSON only - all node parameters absent is a special case that results in multiple objects containing records)</i></para><para><b>Example 7:</b><c>"CollectionNode|Root/Members[@region=North],ClusterNode|Group[@id=2][@zone=\"\"]/Family,RecordNode|Data/Member[@class=\"main\"],AttributeFields|ID;zone"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only)</i></para><para><b>Example 8:</b><c>"ProduceStandaloneObjects,SkipColumnPresorting,IndentChars|  "</c><i>(UnboundJSON)</i></para><para>This configuration setting is only applicable when <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.OutputDataKind" /> value is <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" />, <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />.</para></summary>
+            </para></note><para><b>Example 1:</b><c>"CollectionNode|Members,RecordNode|Member,IndentChars|  "</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />)</i></para><para><b>Example 2:</b><c>"RecordNode|Member,IndentChars|\t"</c><i>(XML or JSON)</i></para><para><b>Example 3:</b><c>"CollectionNode|Root/Members,ClusterNode|Group/Subgroup/Family,RecordNode|Data/Member"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" />)</i></para><para><b>Example 4:</b><c>"RecordNode|,IndentChars|  "</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> only - an array of object containing records)</i></para><para><b>Example 5:</b><c>"ClusterNode|,RecordNode|"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> only - an array of arrays=clusters of objects=records)</i></para><para><b>Example 6:</b><c>""</c><i>(JSON only - all node parameters absent is a special case that results in multiple objects containing records)</i></para><para><b>Example 7:</b><c>"CollectionNode|Root/Members[@region=North],ClusterNode|Group[@id=2][@zone=\"\"]/Family,RecordNode|Data/Member[@class=\"main\"],AttributeFields|ID;zone"</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" /> only)</i></para><para><b>Example 8:</b><c>"ProduceStandaloneObjects,SkipColumnPresorting,IndentChars|  "</c><i>(<see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" /> only)</i></para><para>This configuration setting is only applicable when <see cref="P:Mavidian.DataConveyer.Orchestrators.OrchestratorConfig.OutputDataKind" /> value is <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.XML" />, <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.JSON" /> or <see cref="F:Mavidian.DataConveyer.Common.KindOfTextData.UnboundJSON" />.</para></summary>
     </member>
     <member name="T:Mavidian.DataConveyer.Orchestrators.OrchestratorCreator">
       <summary>
